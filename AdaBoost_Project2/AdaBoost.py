@@ -27,10 +27,8 @@ def loadDataSet(fileName):
     labelMat = []
     fr = open(fileName)
     for line in fr.readlines():
-        lineArr = []
         curLine = line.strip().split('\t')
-        for i in range(numFeat - 1):
-            lineArr.append(float(curLine[i]))
+        lineArr = [float(curLine[i]) for i in range(numFeat - 1)]
         dataMat.append(lineArr)
         labelMat.append(float(curLine[-1]))
     return dataMat, labelMat
@@ -147,7 +145,7 @@ def adaBoostTrainDS(dataArr, classLabels, numIt=60):
     # 初始化为全零列
     aggClassEst = np.mat(np.zeros((m, 1)))
     # 迭代
-    for i in range(numIt):
+    for _ in range(numIt):
         # 构建单层决策树
         bestStump, error, classEst = buildStump(dataArr, classLabels, D)
         # print("D:", D.T)

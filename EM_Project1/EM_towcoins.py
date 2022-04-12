@@ -77,9 +77,8 @@ def em(observations, prior, tol=1e-6, iterations=10000):
         delta_change = np.abs(prior[0] - new_prior[0])
         if delta_change < tol:
             break
-        else:
-            prior = new_prior
-            iteration += 1
+        prior = new_prior
+        iteration += 1
     return [new_prior, iteration]
         
 

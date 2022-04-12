@@ -58,7 +58,7 @@ def setOfWords2Vec(vocabList, inputSet):
             # 若这里改为+=则就是基于词袋的模型，遇到一个单词会增加单词向量中德对应值
             returnVec[vocabList.index(word)] = 1
         else:
-            print("the word: %s is not in my Vocabulary" % word)
+            print(f"the word: {word} is not in my Vocabulary")
     # 返回文档向量
     return returnVec
 
@@ -169,10 +169,7 @@ def classifyNB(vec2Classify, p0Vec, p1Vec, pClass1):
     p0 = sum(vec2Classify * p0Vec) + np.log(1.0 - pClass1)
     # print('p0:', p0)
     # print('p1:', p1)
-    if p1 > p0:
-        return 1
-    else:
-        return 0
+    return 1 if p1 > p0 else 0
 
 
 """
@@ -192,11 +189,7 @@ def testingNB():
     listOPosts, listclasses = loadDataSet()
     # 创建词汇表,将输入文本中的不重复的单词进行提取组成单词向量
     myVocabList = createVocabList(listOPosts)
-    trainMat = []
-    for postinDoc in listOPosts:
-        # 将实验样本向量化若postinDoc中的单词在myVocabList出现则将returnVec该位置的索引置1
-        # 将6组数据list存储在trainMat中
-        trainMat.append(setOfWords2Vec(myVocabList, postinDoc))
+    trainMat = [setOfWords2Vec(myVocabList, postinDoc) for postinDoc in listOPosts]
     # 训练朴素贝叶斯分类器
     p0V, p1V, pAb = trainNB0(np.array(trainMat), np.array(listclasses))
     # 测试样本1

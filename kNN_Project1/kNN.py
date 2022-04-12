@@ -103,16 +103,14 @@ def file2matrix(filename):
     returnMat = np.zeros((numberOfLines, 3))
     # 创建分类标签向量
     classLabelVector = []
-    # 行的索引值
-    index = 0
     # 读取每一行
-    for line in arrayOlines:
+    for index, line in enumerate(arrayOlines):
         # 去掉每一行首尾的空白符，例如'\n','\r','\t',' '
         line = line.strip()
         # 将每一行内容根据'\t'符进行切片,本例中一共有4列
         listFromLine = line.split('\t')
         # 将数据的前3列进行提取保存在returnMat矩阵中，也就是特征矩阵
-        returnMat[index,:] = listFromLine[0:3]
+        returnMat[index,:] = listFromLine[:3]
         # 根据文本内容进行分类1：不喜欢；2：一般；3：喜欢
         if listFromLine[-1] == 'didntLike':
             classLabelVector.append(1)
@@ -120,7 +118,6 @@ def file2matrix(filename):
             classLabelVector.append(2)
         elif listFromLine[-1] == 'largeDoses':
             classLabelVector.append(3)
-        index += 1
     # 返回标签列向量以及特征矩阵
     return returnMat, classLabelVector
 
@@ -152,11 +149,9 @@ def showdatas(datingDataMat, datingLabels):
         # didntLike
         if i == 1:
             LabelsColors.append('black')
-        # smallDoses
-        if i == 2:
+        elif i == 2:
             LabelsColors.append('orange')
-        # largeDoses
-        if i == 3:
+        elif i == 3:
             LabelsColors.append('red')
     # 画出散点图，以datingDataMat矩阵第一列为x，第二列为y，散点大小为15, 透明度为0.5
     axs[0][0].scatter(x=datingDataMat[:,0], y=datingDataMat[:,1], color=LabelsColors, s=15, alpha=.5)
@@ -302,7 +297,7 @@ def classifyPerson():
     # 返回分类结果
     classifierResult = classify0(norminArr, normMat, datingLabels, 4)
     # 打印结果
-    print("你可能%s这个人" % (resultList[classifierResult - 1]))
+    print(f"你可能{resultList[classifierResult - 1]}这个人")
 """
 函数说明：main函数
 

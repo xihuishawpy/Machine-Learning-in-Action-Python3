@@ -4,6 +4,7 @@ Created on Tue Aug 14 22:21:25 2018
 
 @author: wzy
 """
+
 """
 # =============神经网络用于分类=============
 import numpy as np
@@ -87,9 +88,7 @@ clf = MLPRegressor(solver='lbfgs', alpha=1e-5,hidden_layer_sizes=(5, 2), random_
 clf.fit(X, y)
 print('预测结果：', clf.predict([[0.317029, 14.739025]]))  # 预测某个输入对象
 
-cengindex = 0
-for wi in clf.coefs_:
-    cengindex += 1  # 表示底第几层神经网络。
+for cengindex, wi in enumerate(clf.coefs_, start=1):
     print('第%d层网络层:' % cengindex)
     print('权重矩阵维度:',wi.shape)
 

@@ -63,7 +63,7 @@ def createTree(dataSet, minSup=1):
     # 将出现次数在minSup次以上的字母保存在freqItemSet中
     freqItemSet = set(headerTable.keys())
     # 如果没有达标的则返回None
-    if len(freqItemSet) == 0:
+    if not freqItemSet:
         return None, None
     # 此时的headerTable中存放着出现次数在minSup以上的字母以及每个字母出现的次数
     # headerTable这个字典被称为头指针表
@@ -74,15 +74,11 @@ def createTree(dataSet, minSup=1):
     retTree = treeNode('Null Set', 1, None)
     # 遍历dataSet的每一组数据以及这组数据出现的次数
     for tranSet, count in dataSet.items():
-        localD = {}
-        # 遍历一组数据中的每一个字母
-        for item in tranSet:
-            # 如果这个字母出现在头指针表中
-            if item in freqItemSet:
-                # 将这个字母以及它在头指针表中出现的次数存储在localD中
-                localD[item] = headerTable[item][0]
-        # localD中存放的字母多于一个
-        if len(localD) > 0:
+        if localD := {
+            item: headerTable[item][0]
+            for item in tranSet
+            if item in freqItemSet
+        }:
             # 将字母按照出现的次数按降序排列
             ordereItems = [v[0] for v in sorted(localD.items(), key=lambda p:(p[1], p[0]), reverse=True)]
             # 对树进行更新
@@ -111,15 +107,13 @@ def updateTree(items, inTree, headerTable, count):
     if items[0] in inTree.children:
         # 存在则计数增加
         inTree.children[items[0]].inc(count)
-    # 不存在则新建该节点
     else:
         # 创建一个新节点
         inTree.children[items[0]] = treeNode(items[0], count, inTree)
         # 若原来不存在该类别，更新头指针列表
-        if headerTable[items[0]][1] == None:
+        if headerTable[items[0]][1] is None:
             # 指向更新
             headerTable[items[0]][1] = inTree.children[items[0]]
-        # 更新指向
         else:
             updateHeader(headerTable[items[0]][1], inTree.children[items[0]])
     # 仍有未分配完的树，迭代
@@ -159,13 +153,14 @@ Modify:
     2018-08-06
 """
 def loadSimpDat():
-    simpDat = [['r', 'z', 'h', 'j', 'p'],
-               ['z', 'y', 'x', 'w', 'v', 'u', 't', 's'],
-               ['z'],
-               ['r', 'x', 'n', 'o', 's'],
-               ['y', 'r', 'x', 'z', 'q', 't', 'p'],
-               ['y', 'z', 'x', 'e', 'q', 's', 't', 'm']]
-    return simpDat
+    return [
+        ['r', 'z', 'h', 'j', 'p'],
+        ['z', 'y', 'x', 'w', 'v', 'u', 't', 's'],
+        ['z'],
+        ['r', 'x', 'n', 'o', 's'],
+        ['y', 'r', 'x', 'z', 'q', 't', 'p'],
+        ['y', 'z', 'x', 'e', 'q', 's', 't', 'm'],
+    ]
 
 
 """

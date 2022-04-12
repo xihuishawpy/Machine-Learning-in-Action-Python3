@@ -92,10 +92,8 @@ def calcEk(oS, k):
     # multiply(a,b)就是个乘法，如果a,b是两个数组，那么对应元素相乘
     # .T为转置
     fXk = float(np.multiply(oS.alphas, oS.labelMat).T * (oS.X * oS.X[k, :].T) + oS.b)
-    # 计算误差项
-    Ek = fXk - float(oS.labelMat[k])
     # 返回误差项
-    return Ek
+    return fXk - float(oS.labelMat[k])
 
 
 """
@@ -113,7 +111,7 @@ Modify:
 """
 def selectJrand(i, m):
     j = i
-    while(j == i):
+    while j == j:
         # uniform()方法将随机生成一个实数，它在[x, y)范围内
         j = int(random.uniform(0, m))
     return j
@@ -232,54 +230,54 @@ Modify:
 def innerL(i, oS):
     # 步骤1：计算误差Ei
     Ei = calcEk(oS, i)
-    # 优化alpha,设定一定的容错率
-    if((oS.labelMat[i] * Ei < -oS.tol) and (oS.alphas[i] < oS.C)) or ((oS.labelMat[i] * Ei > oS.tol) and (oS.alphas[i] > 0)):
-        # 使用内循环启发方式2选择alpha_j,并计算Ej
-        j, Ej = selectJ(i, oS, Ei)
-        # 保存更新前的alpha值，使用深层拷贝
-        alphaIold = oS.alphas[i].copy()
-        alphaJold = oS.alphas[j].copy()
-        # 步骤2：计算上界H和下界L
-        if(oS.labelMat[i] != oS.labelMat[j]):
-            L = max(0, oS.alphas[j] - oS.alphas[i])
-            H = min(oS.C, oS.C + oS.alphas[j] - oS.alphas[i])
-        else:
-            L = max(0, oS.alphas[j] + oS.alphas[i] - oS.C)
-            H = min(oS.C, oS.alphas[j] + oS.alphas[i])
-        if L == H:
-            print("L == H")
-            return 0
-        # 步骤3：计算eta
-        eta = 2.0 * oS.X[i, :] * oS.X[j, :].T - oS.X[i, :] * oS.X[i, :].T - oS.X[j, :] * oS.X[j, :].T
-        if eta >= 0:
-            print("eta >= 0")
-            return 0
-        # 步骤4：更新alpha_j
-        oS.alphas[j] -= oS.labelMat[j] * (Ei - Ej) / eta
-        # 步骤5：修剪alpha_j
-        oS.alphas[j] = clipAlpha(oS.alphas[j], H, L)
-        # 更新Ej至误差缓存
-        updateEk(oS, j)
-        if(abs(oS.alphas[j] - alphaJold) < 0.00001):
-            print("alpha_j变化太小")
-            return 0
-        # 步骤6：更新alpha_i
-        oS.alphas[i] += oS.labelMat[i] * oS.labelMat[j] * (alphaJold - oS.alphas[j])
-        # 更新Ei至误差缓存
-        updateEk(oS, i)
-        # 步骤7：更新b_1和b_2:
-        b1 = oS.b - Ei - oS.labelMat[i] * (oS.alphas[i] - alphaIold) * oS.X[i, :] * oS.X[i, :].T - oS.labelMat[j] * (oS.alphas[j] - alphaJold) * oS.X[j, :] * oS.X[i, :].T
-        b2 = oS.b - Ej - oS.labelMat[i] * (oS.alphas[i] - alphaIold) * oS.X[i, :] * oS.X[j, :].T - oS.labelMat[j] * (oS.alphas[j] - alphaJold) * oS.X[j, :] * oS.X[j, :].T
-        # 步骤8：根据b_1和b_2更新b
-        if(0 < oS.alphas[i] < oS.C):
-            oS.b = b1
-        elif(0 < oS.alphas[j] < oS.C):
-            oS.b = b2
-        else:
-            oS.b = (b1 + b2) / 2.0
-        return 1
-    else:
+    if (oS.labelMat[i] * Ei >= -oS.tol or oS.alphas[i] >= oS.C) and (
+        oS.labelMat[i] * Ei <= oS.tol or oS.alphas[i] <= 0
+    ):
         return 0
+    # 使用内循环启发方式2选择alpha_j,并计算Ej
+    j, Ej = selectJ(i, oS, Ei)
+    # 保存更新前的alpha值，使用深层拷贝
+    alphaIold = oS.alphas[i].copy()
+    alphaJold = oS.alphas[j].copy()
+        # 步骤2：计算上界H和下界L
+    if oS.labelMat[i] == oS.labelMat[j]:
+        L = max(0, oS.alphas[j] + oS.alphas[i] - oS.C)
+        H = min(oS.C, oS.alphas[j] + oS.alphas[i])
+    else:
+        L = max(0, oS.alphas[j] - oS.alphas[i])
+        H = min(oS.C, oS.C + oS.alphas[j] - oS.alphas[i])
+    if L == H:
+        print("L == H")
+        return 0
+    # 步骤3：计算eta
+    eta = 2.0 * oS.X[i, :] * oS.X[j, :].T - oS.X[i, :] * oS.X[i, :].T - oS.X[j, :] * oS.X[j, :].T
+    if eta >= 0:
+        print("eta >= 0")
+        return 0
+    # 步骤4：更新alpha_j
+    oS.alphas[j] -= oS.labelMat[j] * (Ei - Ej) / eta
+    # 步骤5：修剪alpha_j
+    oS.alphas[j] = clipAlpha(oS.alphas[j], H, L)
+    # 更新Ej至误差缓存
+    updateEk(oS, j)
+    if(abs(oS.alphas[j] - alphaJold) < 0.00001):
+        print("alpha_j变化太小")
+        return 0
+    # 步骤6：更新alpha_i
+    oS.alphas[i] += oS.labelMat[i] * oS.labelMat[j] * (alphaJold - oS.alphas[j])
+    # 更新Ei至误差缓存
+    updateEk(oS, i)
+    # 步骤7：更新b_1和b_2:
+    b1 = oS.b - Ei - oS.labelMat[i] * (oS.alphas[i] - alphaIold) * oS.X[i, :] * oS.X[i, :].T - oS.labelMat[j] * (oS.alphas[j] - alphaJold) * oS.X[j, :] * oS.X[i, :].T
+    b2 = oS.b - Ej - oS.labelMat[i] * (oS.alphas[i] - alphaIold) * oS.X[i, :] * oS.X[j, :].T - oS.labelMat[j] * (oS.alphas[j] - alphaJold) * oS.X[j, :] * oS.X[j, :].T
+    # 步骤8：根据b_1和b_2更新b
+    if(0 < oS.alphas[i] < oS.C):
+        oS.b = b1
+    elif(0 < oS.alphas[j] < oS.C):
+        oS.b = b2
+    else:
+        oS.b = (b1 + b2) / 2.0
+    return 1
     
     
 """
@@ -307,7 +305,7 @@ def smoP(dataMatIn, classLabels, C, toler, maxIter):
     entrieSet = True
     alphaPairsChanged = 0
     # 遍历整个数据集alpha都没有更新或者超过最大迭代次数，则退出循环
-    while(iter < maxIter) and ((alphaPairsChanged > 0) or (entrieSet)):
+    while (iter < maxIter) and ((alphaPairsChanged > 0) or (entrieSet)):
         alphaPairsChanged = 0
         # 遍历整个数据集
         if entrieSet:
@@ -315,15 +313,13 @@ def smoP(dataMatIn, classLabels, C, toler, maxIter):
                 # 使用优化的SMO算法
                 alphaPairsChanged += innerL(i, oS)
                 print("全样本遍历:第%d次迭代 样本:%d, alpha优化次数:%d" % (iter, i, alphaPairsChanged))
-            iter += 1
-        # 遍历非边界值
         else:
             # 遍历不在边界0和C的alpha
             nonBoundIs = np.nonzero((oS.alphas.A > 0) * (oS.alphas.A < C))[0]
             for i in nonBoundIs:
                 alphaPairsChanged += innerL(i, oS)
                 print("非边界遍历:第%d次迭代 样本:%d, alpha优化次数:%d" % (iter, i, alphaPairsChanged))
-            iter += 1
+        iter += 1
         # 遍历一次后改为非边界遍历
         if entrieSet:
             entrieSet = False

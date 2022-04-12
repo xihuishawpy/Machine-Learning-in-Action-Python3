@@ -29,16 +29,12 @@ def colicSklearn():
     testLabels = []
     for line in frTrain.readlines():
         currLine = line.strip().split('\t')
-        lineArr = []
-        for i in range(len(currLine) - 1):
-            lineArr.append(float(currLine[i]))
+        lineArr = [float(currLine[i]) for i in range(len(currLine) - 1)]
         trainingSet.append(lineArr)
         trainingLabels.append(float(currLine[-1]))
     for line in frTest.readlines():
         currLine = line.strip().split('\t')
-        lineArr = []
-        for i in range(len(currLine) - 1):
-            lineArr.append(float(currLine[i]))
+        lineArr = [float(currLine[i]) for i in range(len(currLine) - 1)]
         testSet.append(lineArr)
         testLabels.append(float(currLine[-1]))
     # fit(X,y) Fit the model according to the given training data

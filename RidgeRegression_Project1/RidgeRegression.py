@@ -28,10 +28,8 @@ def loadDataSet(filename):
     yArr = []
     fr = open(filename)
     for line in fr.readlines():
-        lineArr = []
         curLine = line.strip().split('\t')
-        for i in range(numFeat):
-            lineArr.append(float(curLine[i]))
+        lineArr = [float(curLine[i]) for i in range(numFeat)]
         xArr.append(lineArr)
         yArr.append(float(curLine[-1]))
     return xArr, yArr
@@ -58,9 +56,7 @@ def ridgeRegres(xMat, yMat, lam=0.2):
     if np.linalg.det(demon) == 0.0:
         print("矩阵为奇异矩阵，不能求逆")
         return
-    # .I求逆矩阵
-    ws = (demon.I) * (xMat.T) * yMat
-    return ws
+    return (demon.I) * (xMat.T) * yMat
 
 
 """

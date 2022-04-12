@@ -167,14 +167,10 @@ def createTree(dataSet, leafType=regLeaf, errType=regErr, ops=(1, 4)):
     # 选择最佳切分特征和特征值
     feat, val = chooseBestSplit(dataSet, leafType, errType, ops)
     # 如果没有特征，则返回特征值
-    if feat == None:
+    if feat is None:
         return val
     # 回归树
-    retTree = {}
-    # 分割特征索引
-    retTree['spInd'] = feat
-    # 分割标准
-    retTree['spVal'] = val
+    retTree = {'spInd': feat, 'spVal': val}
     # 分成左数据集和右数据集
     lSet, rSet = binSplitDataSet(dataSet, feat, val)
     # 创建左子树和右子树 递归

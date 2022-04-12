@@ -66,7 +66,7 @@ def TextProcessing(folder_path, test_size=0.2):
             # 存储上一级文件夹名称
             class_list.append(folder)
             # 自增
-            j += 1         
+            j += 1
     # zip压缩合并，将数据与标签对应压缩
     # zip()函数用于将可迭代的对象作为参数，将对象中对应的元素打包成一个个元组，然后返回由这些元组组成的列表
     # 如果各个迭代器的元素个数不一致，则返回列表长度与最短对象相同，利用*号操作符，可以将元组解压为列表
@@ -88,7 +88,7 @@ def TextProcessing(folder_path, test_size=0.2):
     all_words_dict = {}
     for word_list in train_data_list:
         for word in word_list:
-            if word in all_words_dict.keys():
+            if word in all_words_dict:
                 all_words_dict[word] += 1
             else:
                 # 拉普拉斯平滑
@@ -152,7 +152,7 @@ def words_dict(all_words_list, deleteN, stopwords_set=set()):
     # 特征列表
     feature_words = []
     n = 1
-    for t in range(deleteN, len(all_words_list), 1):
+    for t in range(deleteN, len(all_words_list)):
         # feature_words的维度为1000
         if n > 1000:
             break
@@ -183,8 +183,7 @@ def TextFeatures(train_data_list, test_data_list, feature_words):
     def text_features(text, feature_words):
         # set是一个无序且不重复的元素集合
         text_words = set(text)
-        features = [1 if word in text_words else 0 for word in feature_words]
-        return features
+        return [1 if word in text_words else 0 for word in feature_words]
     train_feature_list = [text_features(text, feature_words) for text in train_data_list]
     test_feature_list = [text_features(text, feature_words) for text in test_data_list]
     # 返回结果
@@ -209,9 +208,7 @@ Modify:
 def TextClassifier(train_feature_list, test_feature_list, train_class_list, test_class_list):
     # fit(X,y) Fit Naive Bayes classifier according to X, y
     classifier = MultinomialNB().fit(train_feature_list, train_class_list)
-    # score(X,y) Returns the mean accuracy on the given test data and labels
-    test_accuracy = classifier.score(test_feature_list, test_class_list)
-    return test_accuracy
+    return classifier.score(test_feature_list, test_class_list)
 
 
 """

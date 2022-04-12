@@ -536,7 +536,7 @@ def main():
     createPlot(myTree)
     # print(dataSet)
     # print(calcShannonEnt(dataSet))
-    print("最优特征索引值:" + str(chooseBestFeatureToSplit(dataSet)))
+    print(f"最优特征索引值:{str(chooseBestFeatureToSplit(dataSet))}")
 
 if __name__ == '__main__':
     main()

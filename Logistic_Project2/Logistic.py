@@ -49,7 +49,7 @@ def gradAscent(dataMath, classLabels):
     # 最大迭代次数
     maxCycles = 500
     weights = np.ones((n, 1))
-    for k in range(maxCycles):
+    for _ in range(maxCycles):
         # 梯度上升矢量化公式
         h = sigmoid(dataMatrix * weights)
         error = labelMat - h
@@ -118,9 +118,7 @@ def colicTest():
     trainingLabels = []
     for line in frTrain.readlines():
         currLine = line.strip().split('\t')
-        lineArr = []
-        for i in range(len(currLine) - 1):
-            lineArr.append(float(currLine[i]))
+        lineArr = [float(currLine[i]) for i in range(len(currLine) - 1)]
         trainingSet.append(lineArr)
         # trainingLabels.append(lineArr)
         trainingLabels.append(float(currLine[-1]))
@@ -133,9 +131,7 @@ def colicTest():
     for line in frTest.readlines():
         numTestVect += 1.0
         currLine = line.strip().split('\t')
-        lineArr = []
-        for i in range(len(currLine) - 1):
-            lineArr.append(float(currLine[i]))
+        lineArr = [float(currLine[i]) for i in range(len(currLine) - 1)]
         # if int(classifyVector(np.array(lineArr), trainWeights)) != int(currLine[-1]):
         if int(classifyVector(np.array(lineArr), trainWeights[:,0])) != int(currLine[-1]):
             errorCount += 1
@@ -159,10 +155,7 @@ Modify:
 """
 def classifyVector(inX, weights):
     prob = sigmoid(sum(inX * weights))
-    if prob > 0.5:
-        return 1.0
-    else:
-        return 0.0
+    return 1.0 if prob > 0.5 else 0.0
 
 
 if __name__ == '__main__':

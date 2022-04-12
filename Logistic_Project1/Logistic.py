@@ -60,18 +60,15 @@ def loadDataSet():
     dataMat = []
     # 创建标签列表
     labelMat = []
-    # 打开文件
-    fr = open('testSet.txt')
-    # 逐行读取
-    for line in fr.readlines():
-        # 去掉每行两边的空白字符，并以空格分隔每行数据元素
-        lineArr = line.strip().split()
-        # 添加数据
-        dataMat.append([1.0, float(lineArr[0]), float(lineArr[1])])
-        # 添加标签
-        labelMat.append(int(lineArr[2]))
-    # 关闭文件
-    fr.close()
+    with open('testSet.txt') as fr:
+        # 逐行读取
+        for line in fr.readlines():
+            # 去掉每行两边的空白字符，并以空格分隔每行数据元素
+            lineArr = line.strip().split()
+            # 添加数据
+            dataMat.append([1.0, float(lineArr[0]), float(lineArr[1])])
+            # 添加标签
+            labelMat.append(int(lineArr[2]))
     # 返回
     return dataMat, labelMat
 
@@ -178,7 +175,7 @@ def gradAscent(dataMath, classLabels):
     maxCycles = 500
     weights = np.ones((n, 1))
     weights_array = np.array([])
-    for k in range(maxCycles):
+    for _ in range(maxCycles):
         # 梯度上升矢量化公式
         h = sigmoid(dataMatrix * weights)
         error = labelMat - h

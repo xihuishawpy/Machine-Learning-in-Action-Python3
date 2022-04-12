@@ -23,12 +23,9 @@ def imgLoadData(filename):
     myl = []
     # 打开文本文件，并从文件以数组方式读入字符
     for line in open(filename).readlines():
-        newRow = []
-        for i in range(32):
-            newRow.append(int(line[i]))
+        newRow = [int(line[i]) for i in range(32)]
         myl.append(newRow)
-    myMat = np.mat(myl)
-    return myMat
+    return np.mat(myl)
 
 
 """
@@ -126,11 +123,7 @@ def standEst(dataMat, user, simMeas, item):
         # similarity 用户相似度   userRating 用户评分
         simTotal += similarity
         ratSimTotal += similarity * userRating
-    if simTotal == 0:
-        return 0
-    # 通过除以所有的评分和，对上述相似度评分的乘积进行归一化，使得最后评分在0~5之间，这些评分用来对预测值进行排序
-    else:
-        return ratSimTotal / simTotal
+    return 0 if simTotal == 0 else ratSimTotal / simTotal
 
 
 """
@@ -174,11 +167,7 @@ def svdEst(dataMat, user, simMeas, item):
         # similarity 用户相似度   userRating 用户评分
         simTotal += similarity
         ratSimTotal += similarity * userRating
-    if simTotal == 0:
-        return 0
-    # 通过除以所有的评分和，对上述相似度评分的乘积进行归一化，使得最后评分在0~5之间，这些评分用来对预测值进行排序
-    else:
-        return ratSimTotal / simTotal
+    return 0 if simTotal == 0 else ratSimTotal / simTotal
 
 
 """

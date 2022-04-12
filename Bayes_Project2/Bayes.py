@@ -74,7 +74,7 @@ def setOfWords2Vec(vocabList, inputSet):
             # 若这里改为+=则就是基于词袋的模型，遇到一个单词会增加单词向量中德对应值
             returnVec[vocabList.index(word)] = 1
         else:
-            print("the word: %s is not in my Vocabulary" % word)
+            print(f"the word: {word} is not in my Vocabulary")
     # 返回文档向量
     return returnVec
 
@@ -103,7 +103,7 @@ def setOfWords2Vec(vocabList, inputSet):
             # 若这里改为+=则就是基于词袋的模型，遇到一个单词会增加单词向量中德对应值
             returnVec[vocabList.index(word)] += 1
         else:
-            print("the word: %s is not in my Vocabulary" % word)
+            print(f"the word: {word} is not in my Vocabulary")
     # 返回文档向量
     return returnVec
 
@@ -192,10 +192,7 @@ def classifyNB(vec2Classify, p0Vec, p1Vec, pClass1):
     p0 = sum(vec2Classify * p0Vec) + np.log(1.0 - pClass1)
     # print('p0:', p0)
     # print('p1:', p1)
-    if p1 > p0:
-        return 1
-    else:
-        return 0
+    return 1 if p1 > p0 else 0
 
 
 """
@@ -234,7 +231,7 @@ def spamTest():
     trainingSet = list(range(50))
     testSet = []
     # 从50个邮件中，随机挑选出40个作为训练集，10个作为测试集
-    for i in range(10):
+    for _ in range(10):
         # 随机选取索引值,随机生成一个实数
         randIndex = int(random.uniform(0, len(trainingSet)))
         # 添加测试集的索引值

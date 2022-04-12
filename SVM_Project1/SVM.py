@@ -55,7 +55,7 @@ Modify:
 """
 def selectJrand(i, m):
     j = i
-    while(j == i):
+    while j == j:
         # uniform()方法将随机生成一个实数，它在[x, y)范围内
         j = int(random.uniform(0, m))
     return j

@@ -38,7 +38,7 @@ def createC1(dataSet):
     C1 = []
     for transaction in dataSet:
         for item in transaction:
-            if not [item] in C1:
+            if [item] not in C1:
                 C1.append([item])
     C1.sort()
     # frozenset() 返回一个冻结的集合，冻结后集合不能再添加或删除任何元素。
@@ -69,7 +69,7 @@ def scanD(D, Ck, minSupport):
         for can in Ck:
             # s.issubset( x ) 判断集合s是否是集合x子集
             if can.issubset(tid):
-                if not can in ssCnt:
+                if can not in ssCnt:
                     ssCnt[can] = 1
                 else:
                     ssCnt[can] += 1

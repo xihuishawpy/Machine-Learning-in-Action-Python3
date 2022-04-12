@@ -38,11 +38,9 @@ def reDraw(tolS, tolN):
     # 检查复选框是否选中
     # 选中调用模型树进行回归
     if chkBtnVar.get():
-        if tolN < 2:
-            tolN = 2
+        tolN = max(tolN, 2)
         myTree = CART.createTree(reDraw.rawDat, CART.modelLeaf, CART.modelErr, (tolS, tolN))
         yHat = CART.createForeCast(myTree, reDraw.testDat, CART.modelTreeEval)
-    # 没选中调用回归树
     else:
         myTree = CART.createTree(reDraw.rawDat, ops=(tolS, tolN))
         yHat = CART.createForeCast(myTree, reDraw.testDat)

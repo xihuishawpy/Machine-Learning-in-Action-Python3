@@ -141,7 +141,7 @@ def adaBoostTrainDS(dataArr, classLabels, numIt=40):
     # 初始化为全零列
     aggClassEst = np.mat(np.zeros((m, 1)))
     # 迭代
-    for i in range(numIt):
+    for _ in range(numIt):
         # 构建单层决策树
         bestStump, error, classEst = buildStump(dataArr, classLabels, D)
         # print("D:", D.T)

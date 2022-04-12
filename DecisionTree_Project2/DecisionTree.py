@@ -5,6 +5,7 @@ Created on Tue Jul 17 21:52:06 2018
 年龄、症状、是否散光、眼泪数量、分类标签
 @author: wzy
 """
+
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 import pandas as pd
 import numpy as np
@@ -18,10 +19,7 @@ if __name__ == '__main__':
         # 处理文件，去掉每行两头的空白符，以\t分隔每个数据
         lenses = [inst.strip().split('\t') for inst in fr.readlines()]
     # 提取每组数据的类别，保存在列表里
-    lenses_targt = []
-    for each in lenses:
-        # 存储Label到lenses_targt中
-        lenses_targt.append([each[-1]])
+    lenses_targt = [[each[-1]] for each in lenses]
     # 特征标签
     lensesLabels = ['age', 'prescript', 'astigmatic', 'tearRate']
     # 保存lenses数据的临时列表

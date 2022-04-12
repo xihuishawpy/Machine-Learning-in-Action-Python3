@@ -32,19 +32,13 @@ def geoGrab(stAddress, city):
     # 获取经纬度网址
     apiStem = "http://where.yahooapis.com/geocode?"
     # 初始化一个字典，存储相关参数
-    params = {}
-    # 返回类型为json
-    params['flags'] = 'J'
-    # 参数appid
-    params['appid'] = 'ppp68N8t'
-    # 参数地址位置信息
-    params['location'] = ('%s %s' % (stAddress, city))
+    params = {'flags': 'J', 'appid': 'ppp68N8t', 'location': f'{stAddress} {city}'}
     # 利用urlencode函数将字典转为URL可以传递的字符串格式
     url_params = urllib.parse.urlencode(params)
     # 组成完整的URL地址api
     yahooApi = apiStem + url_params
     # 打印该URL地址
-    print('%s' % yahooApi)
+    print(f'{yahooApi}')
     # 打开URL，返回JSON格式数据
     c = urllib.request.urlopen(yahooApi)
     # 返回JSON解析后的数据字典
@@ -64,30 +58,26 @@ Modify:
     2018-08-03
 """
 def massPlaceFind(fileName):
-    # "wb+" 以二进制写方式打开,可以读\写文件,如果文件不存在,创建该文件.如果文件已存在,先清空,再打开文件
-    # 以写方式打开,只能写文件,如果文件不存在,创建该文件如果文件已存在,先清空,再打开文件
-    fw = open('places.txt', 'w')
-    for line in open(fileName).readlines():
-        line = line.strip()
-        lineArr = line.split('\t')
-        # 获取该地址的经纬度
-        retDict = geoGrab(lineArr[1], lineArr[2])
-        # 获取到相应的经纬度
-        if retDict['ResultSet']['Error'] == 0:
-            # 从字典中获取经度
-            lat = float(retDict['ResultSet']['Results'][0]['latitute'])
-            # 从字典中获取维度
-            lng = float(retDict['ResultSet']['Results'][0]['longitute'])
-            # 打印地名及对应的经纬度信息
-            print('%s\t%f\t%f' % (lineArr[0], lat, lng))
-            # 保存入文件
-            fw.write('%s\t%f\t%f' % (line, lat, lng))
-        else:
-            print('error fetching')
-        # 为防止频繁调用API，造成请求被封，使函数调用延迟一秒
-        sleep(1)
-    # 文本写入关闭
-    fw.close()
+    with open('places.txt', 'w') as fw:
+        for line in open(fileName).readlines():
+            line = line.strip()
+            lineArr = line.split('\t')
+            # 获取该地址的经纬度
+            retDict = geoGrab(lineArr[1], lineArr[2])
+            # 获取到相应的经纬度
+            if retDict['ResultSet']['Error'] == 0:
+                # 从字典中获取经度
+                lat = float(retDict['ResultSet']['Results'][0]['latitute'])
+                # 从字典中获取维度
+                lng = float(retDict['ResultSet']['Results'][0]['longitute'])
+                # 打印地名及对应的经纬度信息
+                print('%s\t%f\t%f' % (lineArr[0], lat, lng))
+                # 保存入文件
+                fw.write('%s\t%f\t%f' % (line, lat, lng))
+            else:
+                print('error fetching')
+            # 为防止频繁调用API，造成请求被封，使函数调用延迟一秒
+            sleep(1)
 
 
 """

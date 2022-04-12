@@ -28,10 +28,8 @@ def loadDataSet(fileName):
     labelMat = []
     fr = open(fileName)
     for line in fr.readlines():
-        lineArr = []
         curLine = line.strip().split('\t')
-        for i in range(numFeat - 1):
-            lineArr.append(float(curLine[i]))
+        lineArr = [float(curLine[i]) for i in range(numFeat - 1)]
         dataMat.append(lineArr)
         labelMat.append(float(curLine[-1]))
     return dataMat, labelMat
